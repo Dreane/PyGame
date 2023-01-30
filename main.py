@@ -70,19 +70,20 @@ def lander_collider():
     is_collide_state = pygame.sprite.spritecollideany(lander, state_sprites)
     is_collide = pygame.sprite.spritecollideany(lander, map_sprites)
     if is_collide:
+        if is_collide_state and (0 <= lander.angle <= 7 or 353 <= lander.angle <= 360) and lander.speed_y <= 10:
+            state_game_text = state_font.render(f'You Win', False, (255, 255, 255))
+            is_win = True
+            print('Win')
+            new_map()
+        else:
+            state_game_text = state_font.render(f'You Lose', False, (255, 255, 255))
+            is_win = False
         lander.speed_y = 0
         lander.speed_x = 0
         lander.g = 0
         lander.a = 0
         lander.x0 = 0
         lander.y0 = 0
-        if is_collide_state and (0 <= lander.angle <= 7 or 353 <= lander.angle <= 360) and lander.speed_y <= 10:
-            state_game_text = state_font.render(f'You Win', False, (255, 255, 255))
-            is_win = True
-            new_map()
-        else:
-            state_game_text = state_font.render(f'You Lose', False, (255, 255, 255))
-            is_win = False
         return True
     return False
 
@@ -115,9 +116,9 @@ def new_map():
     global map, map_sprites, state_sprites, all_sprites, lander, attempt
     attempt = 1
     clear_group()
+    map = mapping.Map(WIDTH, HEIGHT)
     lander = lander_machine.Lander(map.width_proportion * 1.25, fuel)
     all_sprites.add(lander)
-    map = mapping.Map(WIDTH, HEIGHT)
     map_sprites = map.map_sprites
     state_sprites = map.state_spites
     all_sprites.add(*map_sprites)
@@ -127,7 +128,6 @@ start_screen()
 
 running = True
 while running:
-    print(attempt)
     screen.fill((0, 0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -164,8 +164,10 @@ while running:
         time.sleep(3)
         if is_win:
             new_map()
+            print('Win')
             fuel = lander.fuel
         elif not is_win:
+            print('Lose')
             attempt += 1
             if attempt == 3:
                 start_screen()

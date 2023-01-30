@@ -34,9 +34,9 @@ class Lander(pygame.sprite.Sprite):
     def move(self, li):
         self.change_angle = 0
         if li[pygame.K_LEFT]:
-            self.change_angle = 300 * (1 / 60)
+            self.change_angle = 4
         elif li[pygame.K_RIGHT]:
-            self.change_angle = -5
+            self.change_angle = -4
         self.rot()
 
     def update(self, *args):
@@ -54,8 +54,8 @@ class Lander(pygame.sprite.Sprite):
 
     def start_engine(self, li):
         if li[pygame.K_UP] and self.fuel:
-            self.a = 45
-            self.fuel -= 2
+            self.a = 40
+            self.fuel -= 1
         else:
             self.a = 0
 

@@ -4,7 +4,7 @@ import pygame
 
 
 class Lander(pygame.sprite.Sprite):
-    def __init__(self, proportion):
+    def __init__(self, proportion,fuel):
         super(Lander, self).__init__()
         self.image_not_scaled = pygame.transform.smoothscale(
             pygame.image.load("resources/img/lander_zoom.png").convert(), (proportion, proportion))
@@ -23,7 +23,7 @@ class Lander(pygame.sprite.Sprite):
         self.border = pygame.Rect(0, 0, self.image.get_width(), self.image.get_height())
         self.pos_x = -8
         self.pos_y = -8
-        self.fuel = 1000
+        self.fuel = fuel
 
     def rot(self):
         self.image = pygame.transform.rotate(self.image_not_scaled, self.angle)

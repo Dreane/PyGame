@@ -1,12 +1,14 @@
 import pygame
 import math
-
+import random
+import os
 pygame.init()
 
 
 class Map:
     def __init__(self, width, height):
-        self.txt = [i.strip('\n') for i in open('resources/land/land1.txt').readlines()]
+        files = os.listdir(path="./resources/land")
+        self.txt = [i.strip('\n') for i in open(f'resources/land/land{random.randint(1,len(files))}.txt').readlines()]
         self.length_land = max(map(len, self.txt))
         print(self.length_land)
         self.width_proportion = width // self.length_land
@@ -26,7 +28,7 @@ class Map:
                         line = Line('resources/img/line.png', pos_x, pos_y, self.width_proportion,
                                     self.height_proportion, 0)
                     elif x == '/':
-                        line = Line('resources/img/line.png', pos_x, pos_y, self.width_proportion,
+                        line = Line('resources/img/line.png', pos_x-1, pos_y, self.width_proportion,
                                     self.height_proportion, 45)
                         #pygame.draw.rect(line.image, (255, 255, 255), line.border, 1)
                     elif x == '\\':
@@ -62,7 +64,7 @@ class Line(pygame.sprite.Sprite):
                                                            (width_proportion ** 2 + height_proportion ** 2) ** (1 / 2)),
                                                         3))
             self.image = pygame.transform.rotate(self.image_scaled,
-                                                 math.degrees(math.atan(height_proportion // width_proportion)))
+                                                 math.degrees(math.atan(height_proportion / width_proportion)))
             self.rect = self.image.get_rect(x=pos_x, y=pos_y - height_proportion)
         if rotate == -45:
             self.image_scaled = pygame.transform.scale(self.image_not_scaled,
@@ -70,7 +72,7 @@ class Line(pygame.sprite.Sprite):
                                                            (width_proportion ** 2 + height_proportion ** 2) ** (1 / 2)),
                                                         3))
             self.image = pygame.transform.rotate(self.image_scaled,
-                                                 math.degrees(math.atan(-height_proportion // width_proportion)))
+                                                 math.degrees(math.atan(-height_proportion / width_proportion)))
             self.rect = self.image.get_rect(x=pos_x, y=pos_y - height_proportion)
         if rotate == 0:
             self.image = pygame.transform.scale(self.image_not_scaled, (width_proportion, 3))

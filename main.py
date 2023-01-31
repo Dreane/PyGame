@@ -22,7 +22,6 @@ map = mapping.Map(WIDTH, HEIGHT)
 lander = lander_machine.Lander(map.width_proportion * 1.25, fuel)
 land_rect = lander.image.get_rect()
 fire = lander_machine.Fire(map.get_proportion() * 1.5, lander.rect.centerx, lander.rect.centery, lander.angle)
-
 all_sprites.add(lander)
 map_sprites = map.map_sprites
 state_sprites = map.state_spites
@@ -71,19 +70,14 @@ def lander_collider():
     is_collide = pygame.sprite.spritecollideany(lander, map_sprites)
     if is_collide:
         if is_collide_state and (0 <= lander.angle <= 7 or 353 <= lander.angle <= 360) and lander.speed_y <= 10:
+            print(lander.speed_y)
             state_game_text = state_font.render(f'You Win', False, (255, 255, 255))
             is_win = True
             print('Win')
-            new_map()
         else:
             state_game_text = state_font.render(f'You Lose', False, (255, 255, 255))
             is_win = False
-        lander.speed_y = 0
-        lander.speed_x = 0
-        lander.g = 0
-        lander.a = 0
-        lander.x0 = 0
-        lander.y0 = 0
+
         return True
     return False
 
@@ -95,33 +89,57 @@ def clear_group():
 
 
 def first_start():
-    global fuel, lander, attempt
-    start_game()
-    new_map()
-    all_sprites.add(lander)
+    global fuel, lander, attempt, state_sprites, map, map_sprites, all_sprites
+    attempt = 1
     fuel = 1000
-    lander.fuel = fuel
-    attempt = 1
-
-
-def start_game():
-    global map, lander, all_sprites, map_sprites, state_sprites
-    lander.kill()
-    lander = lander_machine.Lander(map.width_proportion * 1.25, fuel)
-    all_sprites.add(lander)
-    state_font = pygame.font.SysFont('Comic Sans MS', 30)
-
-
-def new_map():
-    global map, map_sprites, state_sprites, all_sprites, lander, attempt
-    attempt = 1
     clear_group()
+    print(len(map_sprites))
     map = mapping.Map(WIDTH, HEIGHT)
-    lander = lander_machine.Lander(map.width_proportion * 1.25, fuel)
-    all_sprites.add(lander)
-    map_sprites = map.map_sprites
+    lander = lander_machine.Lander(map.width_proportion, fuel)
     state_sprites = map.state_spites
+    map_sprites = map.map_sprites
     all_sprites.add(*map_sprites)
+    all_sprites.add(lander)
+
+
+def repeat_map():
+    global lander
+    lander.kill()
+    lander = lander_machine.Lander(map.width_proportion, fuel)
+    all_sprites.add(lander)
+
+
+#
+# def first_start():
+#     global fuel, lander, attempt
+#     clear_group()
+#     new_map()
+#     start_game()
+#     all_sprites.add(lander)
+#     fuel = 1000
+#     lander.fuel = fuel
+#     attempt = 1
+#
+#
+# def start_game():
+#     global map, lander, all_sprites, map_sprites, state_sprites
+#     lander.kill()
+#     lander = lander_machine.Lander(map.width_proportion * 1.25, fuel)
+#     all_sprites.add(lander)
+#     state_font = pygame.font.SysFont('Comic Sans MS', 30)
+#
+#
+# def new_map():
+#     global map, map_sprites, state_sprites, all_sprites, lander, attempt
+#     attempt = 1
+#     clear_group()
+#     lander.kill()
+#     map = mapping.Map(WIDTH, HEIGHT)
+#     lander = lander_machine.Lander(map.width_proportion * 1.25, fuel)
+#     all_sprites.add(lander)
+#     map_sprites = map.map_sprites
+#     state_sprites = map.state_spites
+#     all_sprites.add(*map_sprites)
 
 
 start_screen()
@@ -158,14 +176,20 @@ while running:
     clock.tick(60)
     pygame.display.update()
     if lander_collider() or out_border():
+        lander.speed_y = 0
+        lander.speed_x = 0
+        lander.g = 0
+        lander.a = 0
+        lander.x0 = 0
+        lander.y0 = 0
         screen.blit(state_game_text,
                     (WIDTH // 2 - state_game_text.get_width() // 2, HEIGHT // 2 - state_game_text.get_height()))
         pygame.display.flip()
         time.sleep(3)
         if is_win:
-            new_map()
-            print('Win')
             fuel = lander.fuel
+            first_start()
+            print('Win')
         elif not is_win:
             print('Lose')
             attempt += 1
@@ -173,4 +197,4 @@ while running:
                 start_screen()
             else:
                 fuel = lander.fuel
-                start_game()
+                repeat_map()

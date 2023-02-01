@@ -2,13 +2,14 @@ import pygame
 import math
 import random
 import os
+
 pygame.init()
 
 
 class Map:
     def __init__(self, width, height):
         files = os.listdir(path="./resources/land")
-        self.txt = [i.strip('\n') for i in open(f'resources/land/land{random.randint(1,len(files))}.txt').readlines()]
+        self.txt = [i.strip('\n') for i in open(f'resources/land/land{random.randint(1, len(files))}.txt').readlines()]
         self.length_land = max(map(len, self.txt))
         print(self.length_land)
         self.width_proportion = width // self.length_land
@@ -28,9 +29,9 @@ class Map:
                         line = Line('resources/img/line.png', pos_x, pos_y, self.width_proportion,
                                     self.height_proportion, 0)
                     elif x == '/':
-                        line = Line('resources/img/line.png', pos_x-1, pos_y, self.width_proportion,
+                        line = Line('resources/img/line.png', pos_x - 1, pos_y, self.width_proportion,
                                     self.height_proportion, 45)
-                        #pygame.draw.rect(line.image, (255, 255, 255), line.border, 1)
+                        # pygame.draw.rect(line.image, (255, 255, 255), line.border, 1)
                     elif x == '\\':
                         line = Line('resources/img/line.png', pos_x, pos_y, self.width_proportion,
                                     self.height_proportion, -45)
@@ -80,9 +81,10 @@ class Line(pygame.sprite.Sprite):
 
         self.border = pygame.Rect(0, 0, self.image.get_width(), self.image.get_height())
 
+
 class State(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, width_proportion):
         pygame.sprite.Sprite.__init__(self)
         self.image_not_scaled = pygame.image.load('resources/img/state.png').convert_alpha()
         self.image = pygame.transform.scale(self.image_not_scaled, (width_proportion, 5))
-        self.rect = self.image.get_rect(x=pos_x, y=pos_y-3)
+        self.rect = self.image.get_rect(x=pos_x, y=pos_y - 3)

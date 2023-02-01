@@ -4,7 +4,7 @@ import pygame
 
 
 class Lander(pygame.sprite.Sprite):
-    def __init__(self, proportion,fuel):
+    def __init__(self, proportion, fuel):
         super(Lander, self).__init__()
         self.image_not_scaled = pygame.transform.smoothscale(
             pygame.image.load("resources/img/lander_zoom.png").convert(), (proportion, proportion))
@@ -44,7 +44,7 @@ class Lander(pygame.sprite.Sprite):
         self.pos_y += self.speed_y * (1 / 60)
         self.rect.center = (self.pos_x, self.pos_y)
 
-#        pygame.draw.rect(self.image, (255, 255, 255), self.border, 1)
+    #        pygame.draw.rect(self.image, (255, 255, 255), self.border, 1)
 
     def update_speed(self):
         self.ax = -self.a * math.sin(math.radians(self.angle))
@@ -73,4 +73,4 @@ class Fire(pygame.sprite.Sprite):
     def update_pos(self, x, y, angle, l):
         self.image = pygame.transform.rotate(self.image_not_scaled, angle)
         self.rect.center = (x + l * math.sin(math.radians(angle)), y + l * math.cos(math.radians(angle)))
-        #pygame.draw.rect(self.image, (255, 255, 255), self.border, 1)
+        # pygame.draw.rect(self.image, (255, 255, 255), self.border, 1)

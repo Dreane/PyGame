@@ -18,7 +18,6 @@ high_score = ''
 
 map_complete = 0
 
-
 all_sprites = pygame.sprite.Group()
 
 map = mapping.Map(WIDTH, HEIGHT)
@@ -34,7 +33,7 @@ state_game_text = my_font.render(f'', False, (255, 255, 255))
 
 
 def start_screen():
-    global map_complete,high_score
+    global map_complete, high_score
     intro_text = ["Добро пожаловать на борт!",
                   "Нажмите Enter, чтобы начать играть"]
     screen.fill((0, 0, 0))
@@ -71,13 +70,13 @@ def out_border():
 
 
 def lander_collider():
-    global state_game_text, is_win,map_complete
+    global state_game_text, is_win, map_complete
     is_collide_state = pygame.sprite.spritecollideany(lander, state_sprites)
     is_collide = pygame.sprite.spritecollideany(lander, map_sprites)
     if is_collide:
         if is_collide_state and (0 <= lander.angle <= 7 or 353 <= lander.angle <= 360) and lander.speed_y <= 10:
             print(lander.speed_y)
-            state_game_text = state_font.render(f'Map complete: {map_complete+1}', False, (255, 255, 255))
+            state_game_text = state_font.render(f'Map complete: {map_complete + 1}', False, (255, 255, 255))
             is_win = True
             print('Win')
         else:
@@ -181,7 +180,7 @@ while running:
     screen.blit(speed_x_text, (WIDTH - 200, 50))
     screen.blit(speed_y_text, (WIDTH - 200, 75))
 
-    screen.blit(complete_text,(15,50))
+    screen.blit(complete_text, (15, 50))
     screen.blit(fuel_text, (15, 70))
 
     out_border()
@@ -209,7 +208,7 @@ while running:
             attempt += 1
             if attempt == 3:
                 if int(high_score) < map_complete:
-                    open('resources/high_score.txt','w').write(str(map_complete))
+                    open('resources/high_score.txt', 'w').write(str(map_complete))
                 start_screen()
             else:
                 fuel = lander.fuel

@@ -34,12 +34,16 @@ state_game_text = my_font.render(f'', False, (255, 255, 255))
 
 def start_screen():
     global map_complete, high_score
+    intro_font = pygame.font.SysFont('Comic Sans MS', 25)
+
     intro_text = ["Добро пожаловать на борт!",
-                  "Нажмите Enter, чтобы начать играть"]
+                  "Нажмите Enter, чтобы начать играть", "", "Правила игры:", "Управление стрелками на клавиатуре:",
+                  "вправо,влево - поворот угла,", "вверх-запуск двигателя",
+                  "Приземлитесь на платформы, выделенные жирной линией","и облетайте остальные препятствия","При приземлении погрешность угла может составлять 7 градусов","а скорость 10"]
     screen.fill((0, 0, 0))
     text_coord = 50
     for line in intro_text:
-        string_rendered = state_font.render(line, True, pygame.Color('white'))
+        string_rendered = intro_font.render(line, True, pygame.Color('white'))
         intro_rect = string_rendered.get_rect()
         text_coord += 10
         intro_rect.top = text_coord

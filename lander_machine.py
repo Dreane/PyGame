@@ -53,9 +53,9 @@ class Lander(pygame.sprite.Sprite):
         self.speed_y = self.speed_y + self.ay * (1 / 60)
 
     def start_engine(self, li):
-        if li[pygame.K_UP] and self.fuel:
+        if li[pygame.K_UP] and self.fuel > 0:
             self.a = 40
-            self.fuel -= 1
+            self.fuel -= 2
         else:
             self.a = 0
 

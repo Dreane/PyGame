@@ -14,6 +14,10 @@ state_font = pygame.font.SysFont('Comic Sans MS', 30)
 fuel = 1000
 attempt = 1
 is_win = None
+high_score = ''
+
+map_complete = 0
+
 
 all_sprites = pygame.sprite.Group()
 
@@ -30,9 +34,9 @@ state_game_text = my_font.render(f'', False, (255, 255, 255))
 
 
 def start_screen():
+    global map_complete,high_score
     intro_text = ["Добро пожаловать на борт!",
                   "Нажмите Enter, чтобы начать играть"]
-
     screen.fill((0, 0, 0))
     text_coord = 50
     for line in intro_text:
@@ -43,6 +47,8 @@ def start_screen():
         intro_rect.x = WIDTH / 2 - string_rendered.get_width() / 2
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
+        map_complete = 0
+        high_score = open('resources/high_score.txt').read()
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -59,23 +65,27 @@ def start_screen():
 def out_border():
     global state_game_text, is_win
     if lander.rect.x > WIDTH or -60 > lander.rect.x:
-        state_game_text = state_font.render(f'You Lose', False, (255, 255, 255))
+        state_game_text = state_font.render(f'Game over!', False, (255, 255, 255))
         is_win = False
         return True
 
 
 def lander_collider():
-    global state_game_text, is_win
+    global state_game_text, is_win,map_complete
     is_collide_state = pygame.sprite.spritecollideany(lander, state_sprites)
     is_collide = pygame.sprite.spritecollideany(lander, map_sprites)
     if is_collide:
         if is_collide_state and (0 <= lander.angle <= 7 or 353 <= lander.angle <= 360) and lander.speed_y <= 10:
             print(lander.speed_y)
-            state_game_text = state_font.render(f'You Win', False, (255, 255, 255))
+            state_game_text = state_font.render(f'Map complete: {map_complete+1}', False, (255, 255, 255))
             is_win = True
             print('Win')
         else:
-            state_game_text = state_font.render(f'You Lose', False, (255, 255, 255))
+            print(attempt)
+            if attempt == 2:
+                state_game_text = state_font.render(f'Game over', False, (255, 255, 255))
+            else:
+                state_game_text = state_font.render(f'Try again', False, (255, 255, 255))
             is_win = False
 
         return True
@@ -95,6 +105,7 @@ def first_start():
     clear_group()
     print(len(map_sprites))
     map = mapping.Map(WIDTH, HEIGHT)
+    lander.kill()
     lander = lander_machine.Lander(map.width_proportion, fuel)
     state_sprites = map.state_spites
     map_sprites = map.map_sprites
@@ -164,12 +175,14 @@ while running:
     lander.update_speed()
     speed_x_text = my_font.render(f'Horizontal speed: {round(lander.speed_x, 3)}', False, (255, 255, 255))
     speed_y_text = my_font.render(f'Vertical speed: {round(lander.speed_y, 3)}', False, (255, 255, 255))
+    complete_text = my_font.render(f'High score: {map_complete}/{high_score}', False, (255, 255, 255))
     fuel_text = my_font.render(f'Fuel: {lander.fuel}', False, (255, 255, 255))
 
     screen.blit(speed_x_text, (WIDTH - 200, 50))
     screen.blit(speed_y_text, (WIDTH - 200, 75))
 
-    screen.blit(fuel_text, (15, 50))
+    screen.blit(complete_text,(15,50))
+    screen.blit(fuel_text, (15, 70))
 
     out_border()
 
@@ -188,12 +201,15 @@ while running:
         time.sleep(3)
         if is_win:
             fuel = lander.fuel
+            map_complete += 1
             first_start()
             print('Win')
         elif not is_win:
             print('Lose')
             attempt += 1
             if attempt == 3:
+                if int(high_score) < map_complete:
+                    open('resources/high_score.txt','w').write(str(map_complete))
                 start_screen()
             else:
                 fuel = lander.fuel

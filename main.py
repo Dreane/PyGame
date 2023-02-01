@@ -119,39 +119,6 @@ def repeat_map():
     all_sprites.add(lander)
 
 
-#
-# def first_start():
-#     global fuel, lander, attempt
-#     clear_group()
-#     new_map()
-#     start_game()
-#     all_sprites.add(lander)
-#     fuel = 1000
-#     lander.fuel = fuel
-#     attempt = 1
-#
-#
-# def start_game():
-#     global map, lander, all_sprites, map_sprites, state_sprites
-#     lander.kill()
-#     lander = lander_machine.Lander(map.width_proportion * 1.25, fuel)
-#     all_sprites.add(lander)
-#     state_font = pygame.font.SysFont('Comic Sans MS', 30)
-#
-#
-# def new_map():
-#     global map, map_sprites, state_sprites, all_sprites, lander, attempt
-#     attempt = 1
-#     clear_group()
-#     lander.kill()
-#     map = mapping.Map(WIDTH, HEIGHT)
-#     lander = lander_machine.Lander(map.width_proportion * 1.25, fuel)
-#     all_sprites.add(lander)
-#     map_sprites = map.map_sprites
-#     state_sprites = map.state_spites
-#     all_sprites.add(*map_sprites)
-
-
 start_screen()
 
 running = True

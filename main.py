@@ -33,7 +33,7 @@ state_game_text = my_font.render(f'', False, (255, 255, 255))
 
 
 def start_screen():
-    global map_complete, high_score
+    global map_complete, high_score,fuel
     intro_font = pygame.font.SysFont('Comic Sans MS', 25)
 
     intro_text = ["Добро пожаловать на борт!",
@@ -52,6 +52,7 @@ def start_screen():
         screen.blit(string_rendered, intro_rect)
         map_complete = 0
         high_score = open('resources/high_score.txt').read()
+        fuel = 1000
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -104,7 +105,6 @@ def clear_group():
 def first_start():
     global fuel, lander, attempt, state_sprites, map, map_sprites, all_sprites
     attempt = 1
-    fuel = 1000
     clear_group()
     print(len(map_sprites))
     map = mapping.Map(WIDTH, HEIGHT)
